@@ -16,8 +16,8 @@ const thoughtSchema = new Schema(
     },
     //Use a getter method to format the timestamp on query
     username: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+      type: String,
+      required: true,
     },
     reactions: [Reaction],
   },
@@ -25,8 +25,10 @@ const thoughtSchema = new Schema(
     toJSON: {
       virtuals: true,
     },
+    id: false,
   }
 );
+//TODO: get createdDate to show up as FormatDate
 //virtual to return a string format the date
 thoughtSchema.virtual("formatDate").get(function () {
   return this.createdAt.toDateString();
@@ -38,3 +40,5 @@ thoughtSchema.virtual("reactionCount").get(function () {
 });
 //initialize the Thought model
 const Thought = model("thought", thoughtSchema);
+
+module.exports = Thought;

@@ -40,6 +40,8 @@ const userSchema = new Schema(
     toJSON: {
       virtuals: true,
     },
+    //removes the extra id
+    id: false,
   }
 );
 
