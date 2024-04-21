@@ -1,8 +1,12 @@
 const express = require("express");
 //calls mongoose connection which has wrapped local MongoDB connection
 const db = require("./config/connection");
+//TODO call routes instead of models here:
+const routes = require("./routes");
+
 //require model
-const { User } = require("./models");
+// const { User } = require("./models");
+//was removed after activity 25
 
 // const { MongoClient } = require("mongodb");
 
@@ -12,6 +16,8 @@ const port = 3001;
 app.use(express.urlencoded({ extended: true }));
 //built in expres function that parsses incoming requests to JSON
 app.use(express.json());
+//include routes
+app.use(routes);
 
 //connection string to local instance of MongoDB
 //this is defined in connections.js
@@ -58,15 +64,15 @@ app.use(express.json());
 //     });
 // });
 //get all users
-app.get("/all-users", async (req, res) => {
-  try {
-    //using model in route to find all docs that are instanes of that model
-    const result = await User.find({});
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).send({ message: "Internal server Error" });
-  }
-});
+// app.get("/all-users", async (req, res) => {
+//   try {
+//     //using model in route to find all docs that are instanes of that model
+//     const result = await User.find({});
+//     res.status(200).json(result);
+//   } catch (err) {
+//     res.status(500).send({ message: "Internal server Error" });
+//   }
+// });
 //is this a mongoose function?- the db.once("open")?
 db.once("open", () => {
   app.listen(port, () => {
