@@ -58,4 +58,33 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //add a friend to the user account
+  async addFriend(req, res) {
+    try {
+      const userId = req.params.userId;
+      const friendId = req.params.friendId;
+      const addfriend = await User.findOneAndUpdate(
+        { _id: userId },
+        { $addToSet: { friends: friendId } }
+      );
+      res.json(addfriend);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  //remove a friend from the friend list
+  //DELETE NOT WORKING
+  async removeFriend(req, res) {
+    try {
+      // const userId = req.params.userId;
+      const friendId = req.params.friendId;
+      const removefriend = await User.findOneAndDelete(
+        { friends: friendId },
+        { $pull: { friends: friendId } }
+      );
+      res.json(removefriend);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
 };
