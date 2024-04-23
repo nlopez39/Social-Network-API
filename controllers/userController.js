@@ -82,16 +82,12 @@ module.exports = {
     try {
       const userId = req.params.userId;
       const friendId = req.params.friendId;
-      // const removefriend = await User.findOneAndUpdate(
-      //   { _id: userId },
-      //   { friends: friendId },
-      //   { $pull: { friends: friendId } }
-      // );
       const removefriend = await User.findOneAndUpdate(
-        { _id: userId },
-        { $remove: { friends: friendId } },
+        { friends: friendId }, //find
+        { $pull: { friends: friendId } }, //update
         { new: true }
       );
+
       res.json(removefriend);
     } catch (err) {
       res.status(500).json(err);
