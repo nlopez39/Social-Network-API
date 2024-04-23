@@ -1,5 +1,6 @@
 //here we will write the HTTP requests to the server?
 const User = require("../models/User");
+
 const { ObjectId } = require("mongodb");
 //export all the http requests as modules
 //getUsers listens for browser input?
@@ -18,19 +19,21 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const objId = new ObjectId(req.params.userId);
-      const singleUser = await User.findOne({ _id: objId });
+      const singleUser = await User.findOne({ _id: objId }).select("-__v");
       res.json(singleUser);
     } catch (err) {
       res.status(500).json(err);
     }
   },
-  //update a user ---- 4/21 NOT WORKING
+  //update a user
   async updateUser(req, res) {
     try {
       // const objId = new ObjectId(req.params.userId);
-      const updateuser = await User.findOneAndUpdate({
-        _id: req.params.userId,
-      });
+      const updateuser = await User.findOneAndUpdate(
+        { _id: req.params.userId }, //filter
+        { $set: req.body }, //update the body
+        { new: true } //ensures that "updateuser" contains the updated document rather than the original document before the update.
+      );
       console.log("id" + req.params.userId);
       res.json(updateuser);
     } catch (err) {
@@ -65,7 +68,8 @@ module.exports = {
       const friendId = req.params.friendId;
       const addfriend = await User.findOneAndUpdate(
         { _id: userId },
-        { $addToSet: { friends: friendId } }
+        { $addToSet: { friends: friendId } },
+        { new: true }
       );
       res.json(addfriend);
     } catch (err) {
@@ -76,11 +80,17 @@ module.exports = {
   //DELETE NOT WORKING
   async removeFriend(req, res) {
     try {
-      // const userId = req.params.userId;
+      const userId = req.params.userId;
       const friendId = req.params.friendId;
-      const removefriend = await User.findOneAndDelete(
-        { friends: friendId },
-        { $pull: { friends: friendId } }
+      // const removefriend = await User.findOneAndUpdate(
+      //   { _id: userId },
+      //   { friends: friendId },
+      //   { $pull: { friends: friendId } }
+      // );
+      const removefriend = await User.findOneAndUpdate(
+        { _id: userId },
+        { $remove: { friends: friendId } },
+        { new: true }
       );
       res.json(removefriend);
     } catch (err) {
