@@ -24,15 +24,15 @@ const thoughtSchema = new Schema(
   {
     toJSON: {
       virtuals: true,
+      transform: function (doc, ret) {
+        // Format the 'createdAt' field
+        ret.createdAt = ret.createdAt.toDateString();
+      },
     },
+
     id: false,
   }
 );
-//TODO: get createdDate to show up as FormatDate
-//virtual to return a string format the date
-thoughtSchema.virtual("formatDate").get(function () {
-  return this.createdAt.toDateString();
-});
 
 //virtual that will calculate the number of reactions
 thoughtSchema.virtual("reactionCount").get(function () {

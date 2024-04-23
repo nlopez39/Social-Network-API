@@ -25,13 +25,14 @@ const reactionSchema = new Schema(
   },
   {
     toJSON: {
-      virtuals: true,
+      //The function takes two parameters: doc (the original document) and ret (the transformed object).
+      transform: function (doc, ret) {
+        // Format the 'createdAt' field
+        ret.createdAt = ret.createdAt.toDateString();
+      },
     },
     id: false,
   }
 );
-//virtual to return a string format the date
-reactionSchema.virtual("formatDate").get(function () {
-  return this.createdAt.toDateString();
-});
+
 module.exports = reactionSchema;
