@@ -26,7 +26,7 @@ const thoughtSchema = new Schema(
       virtuals: true,
       transform: function (doc, ret) {
         // Format the 'createdAt' field
-        ret.createdAt = ret.createdAt.toDateString();
+        ret.createdAt = ret.createdAt.toLocaleString();
       },
     },
 

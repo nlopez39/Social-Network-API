@@ -28,7 +28,7 @@ const reactionSchema = new Schema(
       //The function takes two parameters: doc (the original document) and ret (the transformed object).
       transform: function (doc, ret) {
         // Format the 'createdAt' field
-        ret.createdAt = ret.createdAt.toDateString();
+        ret.createdAt = ret.createdAt.toLocaleString();
       },
     },
     id: false,

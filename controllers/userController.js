@@ -1,6 +1,6 @@
 //here we will write the HTTP requests to the server?
 const User = require("../models/User");
-
+const Thought = require("../models/Thought");
 const { ObjectId } = require("mongodb");
 //export all the http requests as modules
 //getUsers listens for browser input?
@@ -19,7 +19,7 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const objId = new ObjectId(req.params.userId);
-      const singleUser = await User.findOne({ _id: objId }).select("-__v");
+      const singleUser = await User.findOne({ _id: objId });
       res.json(singleUser);
     } catch (err) {
       res.status(500).json(err);
@@ -55,7 +55,10 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const objId = new ObjectId(req.params.userId);
+
       const deleteuser = await User.findOneAndDelete({ _id: objId });
+      //bonus that deletes the thoughts
+      await Thought.deleteMany({ _id: { $in: deleteuser.thoughts } });
       res.json(deleteuser);
     } catch (err) {
       res.status(500).json(err);
